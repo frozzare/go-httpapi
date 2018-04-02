@@ -80,7 +80,7 @@ func (r *Router) Handle(method, path string, handle interface{}) {
 		handler = r.wrapHandle(r.ResponseHandle(func(r *http.Request, _ Params) (interface{}, interface{}) {
 			return h(r)
 		}))
-	case func(ps httprouter.Params) (interface{}, interface{}):
+	case func(ps Params) (interface{}, interface{}):
 		handler = r.wrapHandle(r.ResponseHandle(func(r *http.Request, ps Params) (interface{}, interface{}) {
 			return h(ps)
 		}))
