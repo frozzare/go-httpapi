@@ -138,3 +138,39 @@ func TestRouterAPI(t *testing.T) {
 		t.Error("routing DELETE failed")
 	}
 }
+
+func TestHandleFunc2(t *testing.T) {
+	var get bool
+
+	router := NewRouter()
+	router.Get("/GET", func(r *http.Request) (interface{}, interface{}) {
+		get = true
+		return nil, nil
+	})
+
+	w := new(mockResponseWriter)
+
+	r, _ := http.NewRequest("GET", "/GET", nil)
+	router.ServeHTTP(w, r)
+	if !get {
+		t.Error("routing GET failed")
+	}
+}
+
+func TestHandleFunc3(t *testing.T) {
+	var get bool
+
+	router := NewRouter()
+	router.Get("/GET", func() (interface{}, interface{}) {
+		get = true
+		return nil, nil
+	})
+
+	w := new(mockResponseWriter)
+
+	r, _ := http.NewRequest("GET", "/GET", nil)
+	router.ServeHTTP(w, r)
+	if !get {
+		t.Error("routing GET failed")
+	}
+}

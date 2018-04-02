@@ -24,7 +24,15 @@ type Params = httprouter.Params
 type Handle = httprouter.Handle
 
 // HandleFunc is a function that can be registered to be a route to handle HTTP requests.
-type HandleFunc func(r *http.Request, ps Params) (interface{}, interface{})
+type HandleFunc func(r *http.Request, ps httprouter.Params) (interface{}, interface{})
+
+// HandleFunc2 is a function that can be registered to be a route to handle HTTP requests.
+// HandleFunc2 does only have http request as a argument.
+type HandleFunc2 func(r *http.Request) (interface{}, interface{})
+
+// HandleFunc3 is a function that can be registered to be a route to handle HTTP requests.
+// HandleFunc3 does not have any arguments.
+type HandleFunc3 func() (interface{}, interface{})
 
 // ParamsFromContext pulls the URL parameters from a request context, or returns nil if none are present.
 // Just a alias function for httprouter.ParamsFromContext.
@@ -57,9 +65,24 @@ func NewRouter(args ...*httprouter.Router) *Router {
 }
 
 // Handle adds a new handle to a path and method.
-func (r *Router) Handle(method, path string, handle HandleFunc) {
-	// Wrap httprouter handle with http.Handler
-	handler := r.wrapHandle(r.ResponseHandle(handle))
+func (r *Router) Handle(method, path string, handle interface{}) {
+	var handler http.Handler
+
+	// Wrap different versions of api handle functions.
+	switch h := handle.(type) {
+	case func(r *http.Request, ps httprouter.Params) (interface{}, interface{}):
+		handler = r.wrapHandle(r.ResponseHandle(h))
+	case func(r *http.Request) (interface{}, interface{}):
+		handler = r.wrapHandle(r.ResponseHandle(func(r *http.Request, _ Params) (interface{}, interface{}) {
+			return h(r)
+		}))
+	case func() (interface{}, interface{}):
+		handler = r.wrapHandle(r.ResponseHandle(func(r *http.Request, _ Params) (interface{}, interface{}) {
+			return h()
+		}))
+	default:
+		return
+	}
 
 	// Append middlewares using alice.
 	handler = r.middlewares.Then(handler)
@@ -75,37 +98,37 @@ func (r *Router) Handler(method, path string, handler http.Handler) {
 }
 
 // Get is a shortcut for router.Handle("GET", path, handle).
-func (r *Router) Get(path string, handle HandleFunc) {
+func (r *Router) Get(path string, handle interface{}) {
 	r.Handle("GET", path, handle)
 }
 
 // Head is a shortcut for router.Handle("HEAD", path, handle).
-func (r *Router) Head(path string, handle HandleFunc) {
+func (r *Router) Head(path string, handle interface{}) {
 	r.Handle("HEAD", path, handle)
 }
 
 // Options is a shortcut for router.Handle("OPTIONS", path, handle).
-func (r *Router) Options(path string, handle HandleFunc) {
+func (r *Router) Options(path string, handle interface{}) {
 	r.Handle("OPTIONS", path, handle)
 }
 
 // Post is a shortcut for router.Handle("POST", path, handle).
-func (r *Router) Post(path string, handle HandleFunc) {
+func (r *Router) Post(path string, handle interface{}) {
 	r.Handle("POST", path, handle)
 }
 
 // Put is a shortcut for router.Handle("PUT", path, handle).
-func (r *Router) Put(path string, handle HandleFunc) {
+func (r *Router) Put(path string, handle interface{}) {
 	r.Handle("PUT", path, handle)
 }
 
 // Patch is a shortcut for router.Handle("PATCH", path, handle).
-func (r *Router) Patch(path string, handle HandleFunc) {
+func (r *Router) Patch(path string, handle interface{}) {
 	r.Handle("PATCH", path, handle)
 }
 
 // Delete is a shortcut for router.Handle("DELETE", path, handle).
-func (r *Router) Delete(path string, handle HandleFunc) {
+func (r *Router) Delete(path string, handle interface{}) {
 	r.Handle("DELETE", path, handle)
 }
 

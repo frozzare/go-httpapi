@@ -8,7 +8,9 @@ The router works almost the same way as [httprouter](https://github.com/juliensc
 
 - Uppercase method functions is capitalized instead.
 - `HandleFunc` has two arguments instead of three (request and params).
-- `HandleFunc` returns the data and/or a error that the response handle will handle.
+- All `HandleFunc` returns the data and/or a error that the response handle will handle.
+- `HandleFunc2` has one argument instead of three (request).
+- `HandleFunc3` has zero arguments instead of three.
 - Default response handler that response with JSON. Can be replaced by a custom handler function.
 - Not all methods exists on `httpapi.Router` struct as `httprouter.Router` has, e.g `HandlerFunc` does not exist.
 - Better support for middlewares with [alice](https://github.com/justinas/alice).
@@ -53,7 +55,7 @@ router := httpapi.NewRouter(&httprouter.Router{
 })
 ```
 
-To modify the response handle:
+To modify the response handle that takes in `HandleFunc`, `HandleFunc2` and `HandleFunc3` is wrapped with `HandleFunc`:
 
 ```go
 router := httpapi.NewRouter()
