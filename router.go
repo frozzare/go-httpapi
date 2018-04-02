@@ -1,4 +1,4 @@
-// Package httpapi combine the populare httprouter package and alice to bring the best of both worlds when creating http apis.
+// Package httpapi combine the popular httprouter package and alice to bring the best of both worlds when creating http apis.
 package httpapi
 
 import (
