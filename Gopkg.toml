@@ -1,0 +1,7 @@
+[[constraint]]
+  branch = "master"
+  name = "github.com/julienschmidt/httprouter"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/justinas/alice"
