@@ -31,8 +31,12 @@ type HandleFunc func(r *http.Request, ps httprouter.Params) (interface{}, interf
 type HandleFunc2 func(r *http.Request) (interface{}, interface{})
 
 // HandleFunc3 is a function that can be registered to be a route to handle HTTP requests.
-// HandleFunc3 does not have any arguments.
+// HandleFunc3 does only have params as a argument.
 type HandleFunc3 func() (interface{}, interface{})
+
+// HandleFunc4 is a function that can be registered to be a route to handle HTTP requests.
+// HandleFunc4 does not have any arguments.
+type HandleFunc4 func() (interface{}, interface{})
 
 // ParamsFromContext pulls the URL parameters from a request context, or returns nil if none are present.
 // Just a alias function for httprouter.ParamsFromContext.
@@ -75,6 +79,10 @@ func (r *Router) Handle(method, path string, handle interface{}) {
 	case func(r *http.Request) (interface{}, interface{}):
 		handler = r.wrapHandle(r.ResponseHandle(func(r *http.Request, _ Params) (interface{}, interface{}) {
 			return h(r)
+		}))
+	case func(ps httprouter.Params) (interface{}, interface{}):
+		handler = r.wrapHandle(r.ResponseHandle(func(r *http.Request, ps Params) (interface{}, interface{}) {
+			return h(ps)
 		}))
 	case func() (interface{}, interface{}):
 		handler = r.wrapHandle(r.ResponseHandle(func(r *http.Request, _ Params) (interface{}, interface{}) {

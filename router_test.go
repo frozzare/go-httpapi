@@ -161,6 +161,24 @@ func TestHandleFunc3(t *testing.T) {
 	var get bool
 
 	router := NewRouter()
+	router.Get("/GET/:name", func(ps Params) (interface{}, interface{}) {
+		get = ps.ByName("name") == "fredrik"
+		return nil, nil
+	})
+
+	w := new(mockResponseWriter)
+
+	r, _ := http.NewRequest("GET", "/GET/fredrik", nil)
+	router.ServeHTTP(w, r)
+	if !get {
+		t.Error("routing GET failed")
+	}
+}
+
+func TestHandleFunc4(t *testing.T) {
+	var get bool
+
+	router := NewRouter()
 	router.Get("/GET", func() (interface{}, interface{}) {
 		get = true
 		return nil, nil
