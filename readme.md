@@ -1,4 +1,4 @@
-# httpapi [![Build Status](https://travis-ci.org/frozzare/go-httpapi.svg?branch=master)](https://travis-ci.org/frozzare/go-httpapi) [![Coverage Status](https://coveralls.io/repos/github/frozzare/go-httpapi/badge.svg?branch=master)](https://coveralls.io/github/frozzare/go-httpapi?branch=master) [![GoDoc](https://godoc.org/github.com/frozzare/go-httpapi?status.svg)](http://godoc.org/github.com/frozzare/go-httpapi)
+# httpapi [![Build Status](https://travis-ci.org/frozzare/go-httpapi.svg?branch=master)](https://travis-ci.org/frozzare/go-httpapi) [![GoDoc](https://godoc.org/github.com/frozzare/go-httpapi?status.svg)](http://godoc.org/github.com/frozzare/go-httpapi) [![Go Report Card](https://goreportcard.com/badge/github.com/frozzare/go-httpapi)](https://goreportcard.com/report/github.com/frozzare/go-httpapi)
 
 > Work in progress
 
