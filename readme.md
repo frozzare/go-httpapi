@@ -1,7 +1,5 @@
 # httpapi [![Build Status](https://travis-ci.org/frozzare/go-httpapi.svg?branch=master)](https://travis-ci.org/frozzare/go-httpapi) [![GoDoc](https://godoc.org/github.com/frozzare/go-httpapi?status.svg)](http://godoc.org/github.com/frozzare/go-httpapi) [![Go Report Card](https://goreportcard.com/badge/github.com/frozzare/go-httpapi)](https://goreportcard.com/report/github.com/frozzare/go-httpapi)
 
-> Work in progress
-
 A http router for building http apis in Go based on [httprouter](https://github.com/julienschmidt/httprouter) and [alice](https://github.com/justinas/alice).
 
 The router works almost the same way as [httprouter](https://github.com/julienschmidt/httprouter) does with some changes:
