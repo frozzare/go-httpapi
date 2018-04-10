@@ -192,3 +192,20 @@ func TestHandleFunc4(t *testing.T) {
 		t.Error("routing GET failed")
 	}
 }
+
+func TestHandleFunc5(t *testing.T) {
+	var get bool
+
+	router := NewRouter()
+	router.Get("/GET", func(w http.ResponseWriter, r *http.Request, _ Params) {
+		get = true
+	})
+
+	w := new(mockResponseWriter)
+
+	r, _ := http.NewRequest("GET", "/GET", nil)
+	router.ServeHTTP(w, r)
+	if !get {
+		t.Error("routing GET failed")
+	}
+}
