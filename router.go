@@ -196,7 +196,7 @@ func (r *Router) defaultResponseHandle(fn HandleFunc) Handle {
 
 		if err, ok := err.(error); ok {
 			json.NewEncoder(w).Encode(map[string]interface{}{
-				"error": err,
+				"error": err.Error(),
 			})
 		}
 	}
