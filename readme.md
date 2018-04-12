@@ -13,6 +13,7 @@ The router works almost the same way as [httprouter](https://github.com/juliensc
 - Default response handler that response with JSON. Can be replaced by a custom handler function.
 - Not all methods exists on `httpapi.Router` struct as `httprouter.Router` has, e.g `HandlerFunc` does not exist.
 - Better support for middlewares with [alice](https://github.com/justinas/alice).
+- Default httprouter handle can also be used.
 
 ## Installation
 
