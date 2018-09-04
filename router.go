@@ -201,7 +201,7 @@ func (r *Router) defaultResponseHandle(fn HandleFunc) Handle {
 				fmt.Fprintf(w, msg)
 			} else {
 				json.NewEncoder(w).Encode(map[string]interface{}{
-					"error": err.Error(),
+					"error": msg,
 				})
 			}
 		}
