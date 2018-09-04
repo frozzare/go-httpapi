@@ -195,9 +195,15 @@ func (r *Router) defaultResponseHandle(fn HandleFunc) Handle {
 		}
 
 		if err, ok := err.(error); ok {
-			json.NewEncoder(w).Encode(map[string]interface{}{
-				"error": err.Error(),
-			})
+			msg := err.Error()
+
+			if msg[0] == '{' && msg[len(msg)-1] == '}' || msg[0] == '[' && msg[len(msg)-1] == ']' {
+				fmt.Fprintf(w, msg)
+			} else {
+				json.NewEncoder(w).Encode(map[string]interface{}{
+					"error": err.Error(),
+				})
+			}
 		}
 	}
 }
