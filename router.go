@@ -64,7 +64,7 @@ func NewRouter(args ...*httprouter.Router) *Router {
 		r.router = httprouter.New()
 	}
 
-	r.ResponseHandle = r.defaultResponseHandle
+	r.ResponseHandle = r.DefaultResponseHandle
 
 	return r
 }
@@ -185,7 +185,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	r.router.ServeHTTP(w, req)
 }
 
-func (r *Router) defaultResponseHandle(fn HandleFunc) Handle {
+func (r *Router) DefaultResponseHandle(fn HandleFunc) Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps Params) {
 		data, err := fn(r, ps)
 
