@@ -185,6 +185,7 @@ func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	r.router.ServeHTTP(w, req)
 }
 
+// DefaultResponseHandle is the default response handle.
 func (r *Router) DefaultResponseHandle(fn HandleFunc) Handle {
 	return func(w http.ResponseWriter, r *http.Request, ps Params) {
 		data, err := fn(r, ps)
