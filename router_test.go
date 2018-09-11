@@ -210,6 +210,38 @@ func TestHandleFunc5(t *testing.T) {
 	}
 }
 
+func TestHandleFunc6(t *testing.T) {
+	var get bool
+	var get2 bool
+
+	router := NewRouter()
+	router.Get("/GET", func(w http.ResponseWriter, r *http.Request) {
+		get = true
+	})
+
+	w := new(mockResponseWriter)
+
+	r, _ := http.NewRequest("GET", "/GET", nil)
+	router.ServeHTTP(w, r)
+	if !get {
+		t.Error("routing GET failed")
+	}
+
+	router.Get("/NAME/:name", func(w http.ResponseWriter, r *http.Request) {
+		ps := ParamsFromContext(r.Context())
+
+		if ps.ByName("name") == "fredrik" {
+			get2 = true
+		}
+	})
+
+	r, _ = http.NewRequest("GET", "/NAME/fredrik", nil)
+	router.ServeHTTP(w, r)
+	if !get2 {
+		t.Error("routing GET with Params failed")
+	}
+}
+
 func TestGroup(t *testing.T) {
 	var get bool
 	var get2 bool
