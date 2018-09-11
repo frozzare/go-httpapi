@@ -47,6 +47,7 @@ func ParamsFromContext(ctx context.Context) Params {
 
 // Router represents the router.
 type Router struct {
+	path           string
 	router         *httprouter.Router
 	middlewares    alice.Chain
 	ResponseHandle func(HandleFunc) httprouter.Handle
@@ -99,13 +100,27 @@ func (r *Router) Handle(method, path string, handle interface{}) {
 	handler = r.middlewares.Then(handler)
 
 	// Route away!
-	r.router.Handler(method, path, handler)
+	r.router.Handler(method, r.joinPath(path), handler)
+}
+
+// Group returns new *Router with given path and middlewares.
+// It should be used for handles which have same path prefix or common middlewares.
+func (r *Router) Group(path string) *Router {
+	if path[len(path)-1] == '/' {
+		path = path[:len(path)-1]
+	}
+	return &Router{
+		middlewares:    r.middlewares,
+		path:           r.joinPath(path),
+		router:         r.router,
+		ResponseHandle: r.ResponseHandle,
+	}
 }
 
 // Handler is an adapter which allows the usage of an http.Handler as a
 // request handle. Just a alias function for httprouter's Handler.
 func (r *Router) Handler(method, path string, handler http.Handler) {
-	r.router.Handler(method, path, handler)
+	r.router.Handler(method, r.joinPath(path), handler)
 }
 
 // Get is a shortcut for router.Handle("GET", path, handle).
@@ -207,6 +222,14 @@ func (r *Router) DefaultResponseHandle(fn HandleFunc) Handle {
 			}
 		}
 	}
+}
+
+func (r *Router) joinPath(path string) string {
+	if (r.path + path)[0] != '/' {
+		panic("path must begin with '/' in path '" + path + "'")
+	}
+
+	return r.path + path
 }
 
 // wrap wraps httprouter.Handle with http.Handler

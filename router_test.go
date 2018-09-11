@@ -209,3 +209,112 @@ func TestHandleFunc5(t *testing.T) {
 		t.Error("routing GET failed")
 	}
 }
+
+func TestGroup(t *testing.T) {
+	var get bool
+	var get2 bool
+
+	router := NewRouter()
+	router.Get("/GET", func(w http.ResponseWriter, r *http.Request, _ Params) {
+		get = true
+	})
+
+	router.Group("/FOO").Group("/BAR").Get("/GET", func(w http.ResponseWriter, r *http.Request, _ Params) {
+		get2 = true
+	})
+
+	w := new(mockResponseWriter)
+
+	r, _ := http.NewRequest("GET", "/GET", nil)
+	router.ServeHTTP(w, r)
+	if !get {
+		t.Error("routing GET failed")
+	}
+
+	r, _ = http.NewRequest("GET", "/FOO/BAR/GET", nil)
+	router.ServeHTTP(w, r)
+	if !get2 {
+		t.Error("routing GET GROUP failed")
+	}
+}
+
+func TestRouterAPIGroup(t *testing.T) {
+	var get, head, options, post, put, patch, delete bool
+
+	base := NewRouter()
+
+	router := base.Group("/FOO")
+
+	router.Get("/GET", func(r *http.Request, ps Params) (interface{}, interface{}) {
+		get = true
+		return nil, nil
+	})
+	router.Head("/GET", func(r *http.Request, ps Params) (interface{}, interface{}) {
+		head = true
+		return nil, nil
+	})
+	router.Options("/GET", func(r *http.Request, ps Params) (interface{}, interface{}) {
+		options = true
+		return nil, nil
+	})
+	router.Post("/POST", func(r *http.Request, ps Params) (interface{}, interface{}) {
+		post = true
+		return nil, nil
+	})
+	router.Put("/PUT", func(r *http.Request, ps Params) (interface{}, interface{}) {
+		put = true
+		return nil, nil
+	})
+	router.Patch("/PATCH", func(r *http.Request, ps Params) (interface{}, interface{}) {
+		patch = true
+		return nil, nil
+	})
+	router.Delete("/DELETE", func(r *http.Request, ps Params) (interface{}, interface{}) {
+		delete = true
+		return nil, nil
+	})
+
+	w := new(mockResponseWriter)
+
+	r, _ := http.NewRequest("GET", "/FOO/GET", nil)
+	router.ServeHTTP(w, r)
+	if !get {
+		t.Error("routing GET failed")
+	}
+
+	r, _ = http.NewRequest("HEAD", "/FOO/GET", nil)
+	router.ServeHTTP(w, r)
+	if !head {
+		t.Error("routing HEAD failed")
+	}
+
+	r, _ = http.NewRequest("OPTIONS", "/FOO/GET", nil)
+	router.ServeHTTP(w, r)
+	if !options {
+		t.Error("routing OPTIONS failed")
+	}
+
+	r, _ = http.NewRequest("POST", "/FOO/POST", nil)
+	router.ServeHTTP(w, r)
+	if !post {
+		t.Error("routing POST failed")
+	}
+
+	r, _ = http.NewRequest("PUT", "/FOO/PUT", nil)
+	router.ServeHTTP(w, r)
+	if !put {
+		t.Error("routing PUT failed")
+	}
+
+	r, _ = http.NewRequest("PATCH", "/FOO/PATCH", nil)
+	router.ServeHTTP(w, r)
+	if !patch {
+		t.Error("routing PATCH failed")
+	}
+
+	r, _ = http.NewRequest("DELETE", "/FOO/DELETE", nil)
+	router.ServeHTTP(w, r)
+	if !delete {
+		t.Error("routing DELETE failed")
+	}
+}
