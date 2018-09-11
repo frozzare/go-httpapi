@@ -221,7 +221,7 @@ func (r *Router) wrapHandle(next Handle) http.Handler {
 func WriteJSON(w http.ResponseWriter, v interface{}) error {
 	js, err := json.Marshal(v)
 	if err != nil {
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return err
 	}
 
