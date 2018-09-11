@@ -191,7 +191,7 @@ func (r *Router) DefaultResponseHandle(fn HandleFunc) Handle {
 		data, err := fn(req, ps)
 
 		if err == nil {
-			r.WriteJSON(w, data)
+			WriteJSON(w, data)
 			return
 		}
 
@@ -201,7 +201,7 @@ func (r *Router) DefaultResponseHandle(fn HandleFunc) Handle {
 			if msg[0] == '{' && msg[len(msg)-1] == '}' || msg[0] == '[' && msg[len(msg)-1] == ']' {
 				fmt.Fprintf(w, msg)
 			} else {
-				r.WriteJSON(w, map[string]interface{}{
+				WriteJSON(w, map[string]interface{}{
 					"error": msg,
 				})
 			}
@@ -218,7 +218,7 @@ func (r *Router) wrapHandle(next Handle) http.Handler {
 
 // WriteJSON writes interface as JSON to response writer.
 // If a error occurred a internal server error status will be written.
-func (r *Router) WriteJSON(w http.ResponseWriter, v interface{}) error {
+func WriteJSON(w http.ResponseWriter, v interface{}) error {
 	js, err := json.Marshal(v)
 	if err != nil {
 		http.Error(w, "Internal server error", http.StatusInternalServerError)
