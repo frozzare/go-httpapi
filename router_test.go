@@ -350,3 +350,31 @@ func TestRouterAPIGroup(t *testing.T) {
 		t.Error("routing DELETE failed")
 	}
 }
+
+func TestGroupIndexCase(t *testing.T) {
+	var get bool
+	var get2 bool
+
+	router := NewRouter()
+	router.Get("/GET", func(w http.ResponseWriter, r *http.Request, _ Params) {
+		get = true
+	})
+
+	router.Group("/FOO").Group("/BAR").Get("/", func(w http.ResponseWriter, r *http.Request, _ Params) {
+		get2 = true
+	})
+
+	w := new(mockResponseWriter)
+
+	r, _ := http.NewRequest("GET", "/GET", nil)
+	router.ServeHTTP(w, r)
+	if !get {
+		t.Error("routing GET failed")
+	}
+
+	r, _ = http.NewRequest("GET", "/FOO/BAR", nil)
+	router.ServeHTTP(w, r)
+	if !get2 {
+		t.Error("routing GET GROUP failed")
+	}
+}

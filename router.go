@@ -228,9 +228,13 @@ func (r *Router) DefaultResponseHandle(fn HandleFunc) Handle {
 	}
 }
 
+// joinPath joins base router path and input path.
 func (r *Router) joinPath(path string) string {
 	if (r.path + path)[0] != '/' {
 		panic("path must begin with '/' in path '" + path + "'")
+	}
+	if path == "/" {
+		return r.path
 	}
 
 	return r.path + path
